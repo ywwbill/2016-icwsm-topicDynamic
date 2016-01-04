@@ -1,0 +1,48 @@
+\begin{appendix}
+
+\section{Derivation of ST-LDA Gibbs Sampling Equation}
+\label{sec:derivation}
+
+The probability of documents over topics are computed as
+
+\begin{eqnarray}
+&&\prob{\bm{z}}{\alpha} \notag \\
+&\propto& \int \prob{\bm{z}}{\bm{\theta}} \prob{\bm{\theta}}{\alpha} \mathrm{d}\bm{\theta}\\
+&\propto& \int \left( \prod_{k=1}^{K} \theta_k^{N_k} \right) \left( \frac {1} {\Delta(\alpha)} \prod_{k=1}^{K} \theta_k^{\alpha-1} \right) \mathrm{d}\bm{\theta}\\
+&\propto& \int \frac{1}{\Delta(\alpha)} \prod_{k=1}^{K} \theta_k^{N_k+\alpha-1} \mathrm{d}\bm{\theta}\\
+&\propto& \frac{\Delta(\bm{N}+\alpha)}{\Delta(\alpha)},
+\end{eqnarray}
+where $\Delta(\cdot)$ is defined as
+
+\begin{equation}
+\Delta(\bm{x}) = \frac {\prod_{k=1}^{K} \Gamma(x_k)} {\Gamma(\sum_{k=1}^{K} x_k)}.
+\end{equation}
+
+The probability of words over topics are computed as
+
+\begin{eqnarray}
+&&\prob {\bm{w}} {\bm{z}, \beta} \notag \\
+&\propto& \int \prob {\bm{w}} {\bm{z}, \bm{\phi}} \prob {\bm{\phi}} {\beta} \mathrm{d} \bm{\phi}\\
+&\propto&\int \left( \prod_{k=1}^{K} \prod_{v=1}^{V} \phi_{k,v}^{N_{k,v}} \right) \left( \prod_{k=1}^{K} \frac {1} {\Delta(\beta)} \prod_{v=1}^{V} \phi_{k,v}^{\beta-1} \right) \mathrm{d} \bm{\phi}\\
+&\propto&\int \prod_{k=1}^{K} \frac {1} {\Delta(\beta)} \prod_{v=1}^{V} \phi_{k,v}^{N_{k,v}+\beta-1} \mathrm{d} \bm{\phi}\\
+&\propto&\prod_{k=1}^{K} \frac {\Delta(\bm{N_k}+\beta)} {\Delta(\beta)}.
+\end{eqnarray}
+
+Therefore, the joint probability of words and topic assignments is 
+
+\begin{equation}
+\prob {\bm{w}, \bm{z}} {\alpha, \beta} = \frac {\Delta(\bm{N}+\alpha)} {\Delta(\alpha)} \prod_{k=1}^{K} \frac {\Delta(\bm{N_k}+\beta)} {\Delta(\beta)}.
+\end{equation}
+
+Finally the Gibbs sampling equation is derived as
+
+\begin{eqnarray}
+&&\prob {z_{d}=k} {\bm{z_{-d}},\bm{w_d}} \notag \\
+&\propto& \frac {\Delta(\bm{N}+\alpha)} {\Delta(\bm{N^{-d}}+\alpha)} \frac {\Delta(\bm{N_k}+\beta)} {\Delta(\bm{N_k^{-d}}+\beta)}\\
+&\propto& \frac {\Gamma(N_k+\alpha)} {\Gamma(N_k^{-d}+\alpha)} \frac {\Gamma(N_{\cdot}^{-d}+K\alpha)} {\Gamma(N_{\cdot}+K\alpha)} \notag \\
+&&\frac {\Gamma(N_{k,\cdot}^{-d}+V\beta)} {\Gamma(N_{k,\cdot}+V\beta)} \prod_{v=1}^{V} \frac {\Gamma(N_{k,v}+\beta)} {\Gamma(N_{k,v}^{-d}+\beta)}\\
+&\propto& \frac {N_{k}^{-d}+\alpha} {N_{\cdot}^{-d}+K\alpha} \frac {\prod\limits_{v=1}^{V} \prod\limits_{i=0}^{N_{d,v}-1} (N_{k,v}^{-d}+\beta+i)} {\prod_{i=0}^{N_{d,\cdot}-1} (N_{k,\cdot}^{-d}+V\beta+i)}\\
+&\propto& \left( N_{k}^{-d}+\alpha \right) \frac {\prod\limits_{v=1}^{V} \prod\limits_{i=0}^{N_{d,v}-1} (N_{k,v}^{-d}+\beta+i)} {\prod_{i=0}^{N_{d,\cdot}-1} (N_{k,\cdot}^{-d}+V\beta+i)}.
+\end{eqnarray}
+
+\end{appendix}
