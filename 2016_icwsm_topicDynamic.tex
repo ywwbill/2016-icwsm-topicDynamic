@@ -13,26 +13,51 @@
 \usepackage{bbm}
 \usepackage{threeparttable}
 
+% new commands for editing
 \newcommand{\prob}[2]{\Pr \left( #1 \,|\, #2 \right)}
 \newcommand{\mult}[2]{\mathrm{Mult} \left( #1 \,|\, #2 \right)}
 \newcommand{\dir}[2]{\mathrm{Dir} \left( #1 \,|\, #2 \right)}
+\newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
+\newcommand{\newcite}[1]{\citeauthor{#1}~\shortcite{#1}}
+
+% commands for text colors
 \newcommand{\red}[1]{{\color{red}{#1}}}
 \newcommand{\blue}[1]{{\color{blue}{#1}}}
 \newcommand{\green}[1]{{\color{green}{#1}}}
 \newcommand{\magenta}[1]{{\color{magenta}{#1}}}
+
+% commands for terms
 \newcommand{\stlda}{ST-LDA\xspace}
 \newcommand{\stlouis}{St.~Louis\xspace}
-\newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
-\newcommand{\newcite}[1]{\citeauthor{#1}~\shortcite{#1}}
+\newcommand{\obamatalk}{\emph{Obama Talk}\xspace}
+\newcommand{\protest}{\emph{Protest}\xspace}
+\newcommand{\racism}{\emph{Racism}\xspace}
+\newcommand{\curfew}{\emph{Curfew}\xspace}
+\newcommand{\michaelbrown}{\emph{Michael Brown}\xspace}
+\newcommand{\newsreport}{\emph{News Report}\xspace}
+\newcommand{\pray}{\emph{Pray}\xspace}
+\newcommand{\shootincident}{\emph{Shoot Incident}\xspace}
+\newcommand{\emotion}{\emph{Emotion}\xspace}
+\newcommand{\raceandcommunity}{\emph{Race and Community}\xspace}
 
+% commands for comments
 \newcommand{\psrcomment}[1]{\textcolor{green}{[PSR: {\bf #1}]} }
+\newcommand{\wycomment}[1]{\textcolor{blue}{[WY: {\bf #1}]} }
+\newcommand{\lhcomment}[1]{\textcolor{magenta}{[LH: {\bf #1}]} }
+\newcommand{\vfmcomment}[1]{\textcolor{red}{[VFM: {\bf #1}]} }
+
+% Use these comment definitions to see paper without comments
+%\newcommand{\psrcomment}[1]{}
+%\newcommand{\wycomment}[1]{}
+%\newcommand{\lhcomment}[1]{}
+%\newcommand{\vfmcomment}[1]{}
 
 %\setlength\titlebox{5cm}
 
 
 \title{Uncovering Topic Dynamics of Social Media and News: A Ferguson Case}
 
-\author{}
+\author{A bunch of new commands are defined. Please take a look at 2016\_icwsm\_topicDynamic.tex.}
 %\author{Lingzi Hong \\
 %  iSchool \\
 %  University of Maryland \\
