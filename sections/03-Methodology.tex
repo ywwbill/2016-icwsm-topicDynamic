@@ -1,22 +1,31 @@
 \section{Methodology}
 \label{sec:model}
 
-\subsection{Single Topic LDA Model and Posterior Inference}
+\subsection{Single Topic LDA Model}
 
-We propose \stlda to deal with short documents like tweets. The intuition is that short documents are unlikely to be related to multiple topics. Instead, one short document is usually talking about a single topic and all its words are generated from this topic. Specifically, the generative process of tweets is defined as
+We propose \stlda to deal with short documents like tweets and long documents like news simultaneously. The intuition is that short documents are unlikely to be related to multiple topics. Instead, one short document is usually talking about a single topic and all its words are generated from this topic. Meanwhile, long documents still follow conventional LDA assumptions: each document contains a mixture of topics. Specifically, the generative process of tweets and news is defined as
 
 \begin{enumerate}
 \item For each topic $k \in \{1, \ldots, K\}$
     \begin{enumerate}
     \item Draw word distribution $\bm{\phi_k} \sim \mathrm{Dir}(\beta)$
     \end{enumerate}
-\item Draw topic distribution $\bm{\theta} \sim \mathrm{Dir}(\alpha)$
-\item For each document $d \in \{1, \ldots, D\}$
+\item For each news document $d\in \{1, \ldots, D^\mathrm{N}\}$
     \begin{enumerate}
-    \item Draw a topic $z_d \sim \mathrm{Mult}(\bm{\theta})$
-    \item For each token $t_{d,n}$ in document $d$
+    \item Draw topic distribution $\bm{\theta^{\mathrm{N}}_{d}} \sim \mathrm{Dir}(\alpha)$
+    \item For each token $t^{\mathrm{N}}_{d,n}$ in news document $d$
         \begin{enumerate}
-        \item Draw a word $w_{d,n} \sim \mathrm{Mult}(\bm{\phi_{z_d}})$
+        \item Draw a topic $z^{\mathrm{N}}_{d,n} \sim \mathrm{Mult}(\bm{\theta^\mathrm{N}_d})$
+        \item Draw a word $w^{\mathrm{N}}_{d,n} \sim \mathrm{Mult}(\bm{\phi_{z^{\mathrm{N}}_{d,n}}})$
+        \end{enumerate}
+    \end{enumerate}
+\item Draw tweet background topic distribution $\bm{\theta^{\mathrm{T}}} \sim \mathrm{Dir}(\alpha)$
+\item For each tweet document $d \in \{1, \ldots, D^\mathrm{T}\}$
+    \begin{enumerate}
+    \item Draw a topic $z^{\mathrm{T}}_d \sim \mathrm{Mult}(\bm{\theta^{\mathrm{T}}})$
+    \item For each token $t^{\mathrm{T}}_{d,n}$ in document $d$
+        \begin{enumerate}
+        \item Draw a word $w^{\mathrm{T}}_{d,n} \sim \mathrm{Mult}(\bm{\phi_{z^{\mathrm{T}}_d}})$
         \end{enumerate}
     \end{enumerate}
 \end{enumerate}
@@ -25,25 +34,35 @@ The corresponding graphical model is given in Figure~\ref{fig:stlda}.
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=.8\linewidth]{figures/single.pdf}
+\includegraphics[width=.8\linewidth]{figures/stlda_model.pdf}
 \caption{Graphical Model of \stlda}\label{fig:stlda}
 \end{figure}
 
-The model looks similar to conventional LDA, since they have same nodes. However, the coverage of two plates are different, which is adapted according to our assumptions.
+The model's news part is the same as that of conventional LDA, but its tweet part is different.
+Specifically, the coverage of two plates are different, which is adapted according to our assumptions.
 
-The first difference is the coverage of word plate (the one with subscript $N_d$).
+The first difference is the coverage of word plate (the one with subscript $N^\mathrm{T}_d$).
 In LDA, it covers both $\bm{z}$ and $\bm{w}$, denoting that every word has its own topic assignment and every document consists of a mixture of topics.
-In \stlda, the plate only covers $\bm{w}$, which means that every word in a tweet is generated from the same topic.\psrcomment{Is there going to be a problem with ``generic" or ``non-topical" words? Not \emph{every} content word is topical, is it?}
+In \stlda's tweet part, the plate only covers $\bm{w}$, which means that every word in a tweet is generated from the same topic.\psrcomment{Is there going to be a problem with ``generic" or ``non-topical" words? Not \emph{every} content word is topical, is it?}
 
-The second difference is the coverage of document plate (the one with subscript $D$). LDA assumes that every document has a topic distribution, but in \stlda, every document only has one topic which can not form a distribution inside a document. Thus, $\bm{\theta}$ is outside the document plate and denotes a background topic distribution of the corpus.
+The second difference is the coverage of document plate (the one with subscript $D^\mathrm{T}$). LDA assumes that every document has a topic distribution, but in \stlda, every tweet only has one topic which can not form a distribution inside a document. Thus, $\bm{\theta^\mathrm{T}}$ is outside the document plate and denotes a background topic distribution of tweets.
 
-The posterior inference of \stlda can be done by Gibbs sampling. The probability of document $d$ being assigned a topic $k$ is computed as
+\subsection{Posterior Inference}
+The posterior inference of \stlda can be done by Gibbs sampling. The sampling equation for news documents is the same as conventional LDA. The probability of $n$-th token in news document $d$ being assigned to a topic $k$ is computed as
+
+\begin{align}
+&\prob {z_{d,n}=k} {\bm{z_{-d}},\bm{w_{-d,n}},w_{d,n}=v} \notag\\
+\propto &\left( N_{d,k}^{-d,n} + \alpha \right) \frac {N_{k,v}^{-d,n} + \beta } {N_{k,\cdot}^{-d} + V\beta},
+\end{align}
+where $N_{d,k}$ denotes the number of tokens in document $d$ assigned to topic $k$; $N_{k,v}$ denotes the count of word $v$ assigned to topic $k$. Marginal counts are denoted by $\cdot$. $^{-d,n}$ denotes that the count excludes the $n$-th token in document $d$.
+
+The probability of tweet $d$ being assigned a topic $k$ is computed as
 
 \begin{align}
 &\prob {z_d=k} {\bm{z_{-d}},\bm{w}} \notag\\
 \propto &\left( N_k^{-d} + \alpha \right) \frac {\prod\limits_{v=1}^{V} \prod\limits_{i=0}^{N_{d,v}-1} \left( N_{k,v}^{-d} + \beta + i \right)} {\prod\limits_{i=0}^{N_{d,\cdot}-1} \left( N_{k,\cdot}^{-d} + V\beta + i \right)},
 \end{align}
-where $N_k$ denotes the number of documents assigned to topic $k$; $N_{d,v}$ is the count of word $v$ in document $d$; $N_{k,v}$ denotes the count of word $v$ assigned to topic $k$. Marginal counts are denoted by $\cdot$. $^{-d}$ denotes that the count excludes document $d$.
+where $N_k$ denotes the number of documents assigned to topic $k$; $N_{d,v}$ is the count of word $v$ in document $d$. $^{-d}$ denotes that the count excludes document $d$.
 
 %A brief derivation of Gibbs sampling equation is attached in %Appendix~\ref{sec:derivation}.
 
