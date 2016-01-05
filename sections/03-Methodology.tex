@@ -43,7 +43,7 @@ Specifically, the coverage of two plates are different, which is adapted accordi
 
 The first difference is the coverage of word plate (the one with subscript $N^\mathrm{T}_d$).
 In LDA, it covers both $\bm{z}$ and $\bm{w}$, denoting that every word has its own topic assignment and every document consists of a mixture of topics.
-In \stlda's tweet part, the plate only covers $\bm{w}$, which means that every word in a tweet is generated from the same topic.\psrcomment{Is there going to be a problem with ``generic" or ``non-topical" words? Not \emph{every} content word is topical, is it?}
+In \stlda's tweet part, the plate only covers $\bm{w}$, which means that every word in a tweet is generated from the same topic.\psrcomment{Is there going to be a problem with ``generic" or ``non-topical" words? Not \emph{every} content word is topical, is it?}\wycomment{``Non-topical" words are of almost the same probability to be assigned to each topic. They won't lead the tweet to a wrong topic if they do not dominate the tweet.}
 
 The second difference is the coverage of document plate (the one with subscript $D^\mathrm{T}$). LDA assumes that every document has a topic distribution, but in \stlda, every tweet only has one topic which can not form a distribution inside a document. Thus, $\bm{\theta^\mathrm{T}}$ is outside the document plate and denotes a background topic distribution of tweets.
 
@@ -73,7 +73,7 @@ where $N_k$ denotes the number of documents assigned to topic $k$; $N_{d,v}$ is 
 % \end{equation}
 
 \subsection{Topic Dynamics}
-\stlda is able to train long (news) and short documents (tweets) simultaneously, by assigning multiple topics to long documents and one topic to short documents.\psrcomment{This is the generative process for \emph{tweets}, but what about news? If this is the whole model, how do news stories get multiple topics?}
+\stlda is able to train long (news) and short documents (tweets) simultaneously, by assigning multiple topics to long documents and one topic to short documents.\psrcomment{This is the generative process for \emph{tweets}, but what about news? If this is the whole model, how do news stories get multiple topics?}\wycomment{Yes, I've updated the model.}
 The output results of \stlda model can be used for further discovery of topic dynamics of tweets and news.
 We define topic dynamics as temporal change of topics using daily sliding window.
 Assuming that every news document has the same impact and contributes equally to the total media environment,\psrcomment{A big assumption? Add weighting?} the topic proportion of day $t$ is the average of topic probabilities of all news documents on that day as
