@@ -1,0 +1,144 @@
+\section{Evaluation of Topic Quality}
+\label{sec:eva}
+
+In this section, we compare the performance by evaluating the topic quality given by LDA and \stlda both intrinsically and extrinsically. The hyperparameters $\alpha$ and $\beta$ are both set to 0.1 and the number of topics is set to 10.
+
+As topics given by two models are in different orders, we match the topics based on KL divergence before comparing them. The matching procedure starts by obtaining a KL divergence table $T$. Each cell $T_{k_1,k_2}$ stores the KL divergence of topic $k_1$ given by LDA and topic $k_2$ given by \stlda as
+
+\begin{eqnarray}
+T_{k_1,k_2}&=&\mathrm{KL}(\bm{\phi_{k_1}^\mathrm{LDA}}||\bm{\phi_{k_2}^\mathrm{\stlda}})\\
+&=&\sum_{v=1}^{V} \phi_{k_1,v}^{\mathrm{LDA}} \log_2 \frac{\phi_{k_1,v}^{\mathrm{LDA}}}{\phi_{k_2,v}^{\mathrm{\stlda}}}.
+\end{eqnarray}
+
+Then we run a depth-first search algorithm on the KL divergence table to find the best match which has the smallest the overall KL divergence.
+
+\subsection{Comparison of Topics}
+
+\begin{table*}[htpb]
+\centering
+\begin{threeparttable}
+\begin{tabular}{|c|c|l|}
+\hline
+\bf \tabincell{c}{Model\\(Corpus)} & \bf Topic & \multicolumn{1}{c|}{\bf Top Words}\\ \hline
+\multirow{5}*{\tabincell{c}{LDA\\(NT)\tnote{1}}} & Obama Talk & happen, i'm, make, thing, talk, situation, what's, what's\_happen, bad, you're\\ \cline{2-3}
+ & Protest & tear\_gas, protester, arrest, fire, medium, rt, protestor, street, crowd\\ \cline{2-3}
+ & Racist & black, white, loot, protect, community, racist, stop, race, citizen, riot\\ \cline{2-3}
+ & Curfew & missouri, state, obama, national\_guard, call, curfew, mo, press, governor\\ \cline{2-3}
+ & Pray & peace, pray, justice, stand, love, tonight, hope, stay, family, safe\\ \hline
+\multirow{5}*{\tabincell{c}{\stlda\\(NT)}} & Obama Talk & obama, president, law\_enforcement, house, holder, make, story, post, include\\ \cline{2-3}
+ & Protest & tear\_gas, arrest, protester, fire, rt, reporter, medium, shoot, crowd\\ \cline{2-3}
+ & Racist & black, white, make, race, america, obama, stop, happen, situation, riot\\ \cline{2-3}
+ & Curfew & missouri, curfew, state, national\_guard, governor, nixon, call, gov, order\\ \cline{2-3}
+ & Pray & peace, pray, stand, justice, night, love, tonight, today, family\\ \hline
+\multirow{5}{*}{\tabincell{c}{LDA\\(N)\tnote{2}}} & Obama Talk & obama, president, house, make, white, news, national, deal, run, defense\\ \cline{2-3}
+ & Protest & st\_louis, nixon, protester, shooting, county, justice, aug., investigation, state, thursday\\ \cline{2-3}
+ & Racist & black, make, white, cop, time, don't, year, good, man, thing\\ \cline{2-3}
+ & Curfew & protester, johnson, tear\_gas, crowd, curfew, night, fire, street, missouri, shoot\\ \cline{2-3}
+ & Pray & (No matching topic)\\ \hline
+\end{tabular}
+\begin{tablenotes}
+\footnotesize
+\item[1] NT: news and tweets.
+\item[2] N: news only.
+\end{tablenotes}
+\caption{Topic Examples}\label{tab:topic}
+\end{threeparttable}
+\end{table*}
+
+To evaluate topic quality, we select the top words under each topic. Because news and tweets are trained together with imbalanced number of documents, it is possible that both models may be biased for one type of documents, thus topics may come from only news or tweets. To ensure that both LDA and \stlda have balanced topics that come from tweets and news, we train another model merely on news and set the results as a baseline for comparison.
+
+Table~\ref{tab:topic} shows four common topics for all three models and one topic that only exists in results trained on news and tweets together. Four common topics indicate that news topics are kept when mixture of documents are trained together. But for the one topic \emph{Pray}, there is no matching topic in results of LDA on news, which tends to be the topic that only exists in tweets. It is also worth noting that top words in the four common topics are different. Top words in LDA on news tend to be more complicated and in written language style, such as \emph{justice} and \emph{investigation}. But top words in the topics by mixture texts are a little different. There are oral phrases, such as \emph{i'm} and \emph{you're}, and words which are highly probable to come from tweets such as \emph{rt} and \emph{gov}. These Twitter words indicate that such topics are also covered by tweets. So we can conclude that \stlda can extract topics from both tweets and next, not biased to one type of texts, and it discovers topics that are common in both news and tweets. However, according to analysis of coverage of topics and top words, there is not much difference between LDA and \stlda. It just verifies that there is not extreme bias for either type of texts when trained together. In Section~\ref{subsec:intrinsic}, we evaluate the quality of tweets' topics as an intrinsic evaluation. Extrinsic evaluation is applied in Section~\ref{subsec:extrinsic}, by using two models in discovery of topic dynamics.
+
+\subsection{Topic Quality for Tweets}
+\label{subsec:intrinsic}
+
+To examine the quality of topic assignment, the most intuitive way is to pick a document and see whether the topic distribution is reasonable to represent the content. Because news is long and contains mixture of latent topics, it is hard to decide whether the topic distribution is appropriate. On the other hand, a tweet is usually constituted by one or two sentences, so it is intuitive to evaluate whether the topic assignment is appropriate.
+
+We list five tweets in Table~\ref{tab:tweets} and their topic distributions by LDA and topic assignments by \stlda are given in Table~\ref{tab:tweet_topic}. Topics in LDA and \stlda are matched and numbered from 0 to 9. Topic names are manually summarized according to top frequency words in the topic.
+
+\begin{table*}[htpb]
+\centering
+\begin{tabular}{|c|p{14cm}|}
+\hline
+\bf No. & \multicolumn{1}{c|}{\bf Content}\\ \hline
+1 & ``@bkesling: ``Hands up, don't shoot" after tear gas fired in \#Ferguson http://t.co/9zQIh31wQg" modern day America...  \#PrayForFerguson\\ \hline
+2 & 80\% black folks think \#Ferguson raises ``important issues about race that need to be discussed," only 37\% of white folks do. Very sad.\\ \hline
+3 & You guys can't blame that cop in \#Ferguson. Shooting your gun 6 times is literally the answer to every question in their training manual.\\ \hline
+4 & \#fergusongate media get it straight. U act like those who don't live in ferguson can't protest. This is for all blacks everywhere.\\ \hline
+5 & But thank God for social media though. Imagine if we're dependent on the news to tell the ``truth" about what's really happening in \#Ferguson\\ \hline
+\end{tabular}
+\caption{Tweet Examples}\label{tab:tweets}
+\end{table*}
+
+\begin{table*}[htpb]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+\multicolumn{3}{|c|}{\bf Tweets} & 1 & 2 & 3 & 4 & 5\\ \hline
+\multirow{10}{*}{\tabincell{c}{\bf LDA Topic\\ \bf Distribution}} & 0 & Obama Talk & 0.017 & \bf 0.373 & 0.011 & 0.017 & \bf 0.888\\ \cline{2-8}
+ & 1 & Protest & \bf 0.517 & 0.009 & 0.011 & \bf 0.183 & 0.013\\ \cline{2-8}
+ & 2 & Racism & 0.017 & \bf 0.555 & \bf 0.233 & 0.017 & 0.013\\ \cline{2-8}
+ & 3 & Curfew & 0.017 & 0.009 & 0.011 & 0.017 & 0.013\\ \cline{2-8}
+ & 4 & Michael Brown & 0.017 & 0.009 & \bf 0.567 & \bf 0.183 & 0.013\\ \cline{2-8}
+ & 5 & News Report & 0.017 & 0.009 & 0.011 & 0.017 & 0.013\\ \cline{2-8}
+ & 6 & Pray & 0.017 & 0.009 & 0.011 & 0.017 & 0.013\\ \cline{2-8}
+ & 7 & Shoot Accident & \bf 0.350 & 0.009 & 0.011 & 0.017 & 0.013\\ \cline{2-8}
+ & 8 & Emotion & 0.017 & 0.009 & \bf 0.122 & \bf 0.183 & 0.013\\ \cline{2-8}
+ & 9 & Race and Community & 0.017 & 0.009 & 0.011 & \bf 0.183 & 0.013\\ \hline
+\multicolumn{3}{|c|}{\bf \stlda Topic} & 1 & 2 & 4 & 8 & 5\\ \hline
+\end{tabular}
+\caption{Tweet Topic Comparison}\label{tab:tweet_topic}
+\end{table*}
+
+The first tweet talks about the conflict between protesters and the police, with a description of the situation and a short comment. It is assigned with two topics with relatively high probability by LDA, thus \emph{Protest} and \emph{Shoot Accident}. Words in \emph{Shoot Accident} talks about \emph{shoot}, \emph{Michael\_brown} and \emph{street}, which tend to be description of the shoot accident. Although the sentence contains words like \emph{shoot}, it is not appropriate to be assigned with topic 7. Meanwhile for the tweet there is small probability under other topics such as \emph{Obama Talk} and \emph{Racism}, which have nothing to do with the content of the tweet. Similarly the second tweet mainly talks about racism, which is what \stlda gives. But it also has the latent topic \emph{Obama Talk} with probability 0.373, and a slight probability for other topics under LDA model. From the text of tweet, it is neither relevant to \emph{Obama Talk}, nor to other topics. The third tweet is talking about police shooting at Michael Brown, which is closest to topic about the accident, so topic 4 \emph{Michael Brown} is appropriate, but others are not. The common pattern in these three cases is that the topic with highest probability in LDA is consistent with the topic given by \stlda. Is it true for all tweets? Could we just use LDA and assign tweet with the one topic with highest probability?
+
+The case of 4th tweet is slightly different. The 4th tweet is constituted by 3 sentences, which seem to talk about media, the protest and race issues. The tweet is assigned by LDA with 5 topics with equally high probability, thus \emph{Protest}, \emph{Michael Brown}, \emph{Shoot Accident}, \emph{Emotion} and \emph{Race and Community}. However it seems that the tweet doesn't mention Michael Brown accident, or shooting things. Similar with the three cases above, there are noisy topics in results given by LDA. It assigns part of the probability to wrong topics, which makes the right topic not so significant. This is the shortage of LDA but tackled by \stlda.
+The 5th tweet shows how \stlda assigns the right topic but LDA fails to. The tweet talks about the role of social media in contrast with news media. The topic is mainly about how others describe the event. So topic 5 \emph{News Report} is appropriate. However, the highest probability goes to \emph{Obama Talk} by LDA, which is not relevant.
+
+The analysis of tweets shows that \stlda has advantage in assigning tweets with one topic, because most of the tweets are short and actually contain only one topic. LDA gives each tweet a probability distribution of topics, which usually contains irrelevant topics and also decreases the importance of right topic. Meanwhile the results of \stlda can't be substituted by assigning the topic with highest probability in the distribution.
+
+\subsection{Comparison of LDA and \stlda in Topic Dynamics}
+\label{subsec:extrinsic}
+
+The extrinsic evaluation is conducted to see how the two algorithms perform in showing topic dynamics. We compare the results of topic dynamics in news and tweets. Figure~\ref{fig:news_topics} shows the change of news topic proportions from August 11 to 27 based on the results of LDA and \stlda. It is similar that investigation of shoot accident and discussion of race are the two main themes of news. Along with the evolvement of event, the proportion of race issues increases, while the voice of investigation reaches a peak on August 17 and decreases thereafter.
+
+\begin{figure*}[htpb]
+\centering
+\subfigure[LDA]
+{
+\includegraphics[width=0.48\linewidth]{figures/1LDANews-2.pdf}
+\label{fig:news_topics_lda}
+}
+\subfigure[\stlda]
+{
+\includegraphics[width=0.48\linewidth]{figures/1STLDANews-2.pdf}
+\label{fig:news_topics_stlda}
+}
+\includegraphics[width=\linewidth]{figures/Legend.pdf}
+\caption{News Topic Dynamics by LDA and \stlda}\label{fig:news_topics}
+\end{figure*}
+
+Topic distribution given by LDA is highly skewed to two main topics, thus the \emph{Shoot Accident} and the \emph{Race and Community}, while other topics take only a small proportion and it is hard to identify the proportion change of these topics. Meanwhile \stlda gives results that are slightly better in representing different topics. Besides the significant change of \emph{Shoot Accident} and \emph{Race and Community}, the \emph{Obama Talk} is discovered as a main topic for media. It keeps a relatively stable proportion of 20\%, and peaks after some important events related with Obama. For example, on August 12, Obama addressed the shooting and urged the community in Ferguson to stay calm. On August 14, he gave a talk saying there is no excuse for protesters to turn to violence, which seems to lead to the peak on August 14 and 15. Also in news topic dynamics by \stlda, the \emph{Protest} shows a peak on August 21, which is consistent with the date when the National Guard withdrew from the Ferguson.
+
+Both LDA and \stlda are unsupervised methods, so it is hard to verify which topic dynamic reflects the real situation. But the topics discovered by \stlda are more diverse, and are consistent with the important events in the timeline.
+
+There is more variance in topic dynamics of tweets by \stlda than LDA, which is shown in Figure~\ref{fig:tweets_topics}. The proportion of topics is close to each other in topic dynamics by LDA, so it is relatively hard to identify the main topics for each day. There is rising point of \emph{Michael Brown} after the shoot accident, and a peak on August 25 when the funeral for Michael Brown is held. However, consistent with the shortage discussed in analysis of tweet topics, LDA gives a probability distribution of topics, of which some are irrelevant. So when aggregating tweets in a day together, the proportion number for each topic is similar, which makes it hard to identify main topics on that day, and change of topics along the time. Comparatively, \stlda gives results with better representation of topic dynamics. There is variation of topics changing overtime. It is clearly that after the shoot accident, emotion of the public surges to a peak on August 11. After the protest event, another emotion topic appears on August 14. Meanwhile, the proportion of \emph{Pray} topic keeps relatively stable from August 11 to August 24, and increases a lot on the day when Michael Brown's funeral is held. These tendencies in topic changes can be seen in topic dynamics of tweets by LDA, but these topics are entangled with other topics, making it hard to differentiate from other topics.
+
+\begin{figure*}[htpb]
+\centering
+\subfigure[LDA]
+{
+\includegraphics[width=0.48\linewidth]{figures/2LDATweets.pdf}
+\label{fig:tweets_topics_lda}
+}
+\subfigure[\stlda]
+{
+\includegraphics[width=0.48\linewidth]{figures/2STLDATweets.pdf}
+\label{fig:tweets_topics_stlda}
+}
+\includegraphics[width=\linewidth]{figures/Legend.pdf}
+\caption{Tweets Topic Dynamics by LDA and \stlda}\label{fig:tweets_topics}
+\end{figure*}
+
+In summary, by intrinsic and extrinsic evaluation, \stlda is more accurate in assigning one topic to each tweet and giving better results in topic dynamics. %In Section~\ref{subsec:topic_track}, we use the results of \stlda on tweets and news for topic tracking analysis.
+
