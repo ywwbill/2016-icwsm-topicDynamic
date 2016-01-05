@@ -1,7 +1,12 @@
 \section{Dataset}
 \label{sec:dat}
 
-We collected 13,238,863 tweets from August 10, 2014 to August 27, 2014 mentioning Ferguson using the Twitter Streaming API. Among them 92,184 are geo-tagged, which takes about 0.70\% of all. We use geo-tagged tweets instead of all tweets because an empirical study~\cite{he2015uncovering} shows that there is geographic difference in tweet topics for a certain event. Meanwhile there is not much difference in the reaction time, volume, and topics between geo-tagged tweets and non geo-tagged tweets. So we use geo-tagged tweets to analyze topics in different areas, in representative of general public opinions. To assist geographic analysis, we use 2014 TIGER/Lines Shapefile to identify the locations of tweets according to tweets' coordinates.\footnote{\url{https://www.census.gov/geo/maps-data/data/tiger-line.html}}
+We collected 13,238,863 tweets from August 10, 2014 to August 27, 2014 mentioning Ferguson using the Twitter Streaming API.
+Among them 92,184 are geo-tagged, which takes about 0.70\% of all.
+We use geo-tagged tweets instead of all tweets because an empirical study~\cite{he2015uncovering} shows that there is geographic difference in tweet topics for a certain event.\psrcomment{It would be interesting to see what it looks like if all 13.2M tweets are used.}
+Meanwhile there is not much difference in the reaction time, volume, and topics between geo-tagged tweets and non geo-tagged tweets.
+So we use geo-tagged tweets to analyze topics in different areas, in representative of general public opinions.
+To assist geographic analysis, we use 2014 TIGER/Lines Shapefile to identify the locations of tweets according to tweets' coordinates.\footnote{\url{https://www.census.gov/geo/maps-data/data/tiger-line.html}}
 
 News is crawled by the links published by news account on Twitter. We randomly selected 108 media accounts from Twitter, for example ``Washington Post", ``NBC News" and ``ABC7News", collected all the tweets they published during the Ferguson event, and extracted news reports from the links they published. In total, there are 1,338 news covering from August 11 to 27.
 

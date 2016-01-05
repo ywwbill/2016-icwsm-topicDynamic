@@ -10,7 +10,7 @@ T_{k_1,k_2}&=&\mathrm{KL}(\bm{\phi_{k_1}^\mathrm{LDA}}||\bm{\phi_{k_2}^\mathrm{\
 &=&\sum_{v=1}^{V} \phi_{k_1,v}^{\mathrm{LDA}} \log_2 \frac{\phi_{k_1,v}^{\mathrm{LDA}}}{\phi_{k_2,v}^{\mathrm{\stlda}}}.
 \end{eqnarray}
 
-Then we run a depth-first search algorithm on the KL divergence table to find the best match which has the smallest the overall KL divergence.
+Then we run a depth-first search algorithm on the KL divergence table to find the best match which has the smallest the overall KL divergence.\psrcomment{C.f. Hungarian Algorithm for bipartite graph matching.}
 
 \subsection{Comparison of Topics}
 
@@ -20,7 +20,7 @@ Then we run a depth-first search algorithm on the KL divergence table to find th
 \begin{tabular}{|c|c|l|}
 \hline
 \bf \tabincell{c}{Model\\(Corpus)} & \bf Topic & \multicolumn{1}{c|}{\bf Top Words}\\ \hline
-\multirow{5}*{\tabincell{c}{LDA\\(NT)\tnote{1}}} & Obama Talk & happen, i'm, make, thing, talk, situation, what's, what's\_happen, bad, you're\\ \cline{2-3}
+\multirow{5}*{\tabincell{c}{LDA\\(NT)\tnote{1}}} & Obama Talk & happen, i'm, make, thing, talk, situation, what's, what's\_happen, bad, you're\psrcomment{Not clear how label and words are connected}\\ \cline{2-3}
  & Protest & tear\_gas, protester, arrest, fire, medium, rt, protestor, street, crowd\\ \cline{2-3}
  & Racist & black, white, loot, protect, community, racist, stop, race, citizen, riot\\ \cline{2-3}
  & Curfew & missouri, state, obama, national\_guard, call, curfew, mo, press, governor\\ \cline{2-3}
@@ -61,11 +61,11 @@ We list five tweets in Table~\ref{tab:tweets} and their topic distributions by L
 \begin{tabular}{|c|p{14cm}|}
 \hline
 \bf No. & \multicolumn{1}{c|}{\bf Content}\\ \hline
-1 & ``@bkesling: ``Hands up, don't shoot" after tear gas fired in \#Ferguson http://t.co/9zQIh31wQg" modern day America...  \#PrayForFerguson\\ \hline
-2 & 80\% black folks think \#Ferguson raises ``important issues about race that need to be discussed," only 37\% of white folks do. Very sad.\\ \hline
-3 & You guys can't blame that cop in \#Ferguson. Shooting your gun 6 times is literally the answer to every question in their training manual.\\ \hline
-4 & \#fergusongate media get it straight. U act like those who don't live in ferguson can't protest. This is for all blacks everywhere.\\ \hline
-5 & But thank God for social media though. Imagine if we're dependent on the news to tell the ``truth" about what's really happening in \#Ferguson\\ \hline
+1 & ``@bkesling: ``Hands up, don't shoot" after tear gas fired in \#Ferguson http://t.co/9zQIh31wQg" modern day America...  \#PrayForFerguson\psrcomment{Label: News? Prayer?}\\ \hline
+2 & 80\% black folks think \#Ferguson raises ``important issues about race that need to be discussed," only 37\% of white folks do. Very sad.\psrcomment{Label: Race}\\ \hline
+3 & You guys can't blame that cop in \#Ferguson. Shooting your gun 6 times is literally the answer to every question in their training manual.\psrcomment{Label: Sarcastic police/race}\\ \hline
+4 & \#fergusongate media get it straight. U act like those who don't live in ferguson can't protest. This is for all blacks everywhere.\psrcomment{Label: Protest}\\ \hline
+5 & But thank God for social media though. Imagine if we're dependent on the news to tell the ``truth" about what's really happening in \#Ferguson\psrcomment{Label: News}\\ \hline
 \end{tabular}
 \caption{Tweet Examples}\label{tab:tweets}
 \end{table*}
@@ -90,7 +90,7 @@ We list five tweets in Table~\ref{tab:tweets} and their topic distributions by L
 \caption{Tweet Topic Comparison}\label{tab:tweet_topic}
 \end{table*}
 
-The first tweet talks about the conflict between protesters and the police, with a description of the situation and a short comment. It is assigned with two topics with relatively high probability by LDA, thus \emph{Protest} and \emph{Shoot Accident}. Words in \emph{Shoot Accident} talks about \emph{shoot}, \emph{Michael\_brown} and \emph{street}, which tend to be description of the shoot accident. Although the sentence contains words like \emph{shoot}, it is not appropriate to be assigned with topic 7. Meanwhile for the tweet there is small probability under other topics such as \emph{Obama Talk} and \emph{Racism}, which have nothing to do with the content of the tweet. Similarly the second tweet mainly talks about racism, which is what \stlda gives. But it also has the latent topic \emph{Obama Talk} with probability 0.373, and a slight probability for other topics under LDA model. From the text of tweet, it is neither relevant to \emph{Obama Talk}, nor to other topics. The third tweet is talking about police shooting at Michael Brown, which is closest to topic about the accident, so topic 4 \emph{Michael Brown} is appropriate, but others are not. The common pattern in these three cases is that the topic with highest probability in LDA is consistent with the topic given by \stlda. Is it true for all tweets? Could we just use LDA and assign tweet with the one topic with highest probability?
+The first tweet talks about the conflict between protesters and the police, with a description of the situation and a short comment. It is assigned with two topics with relatively high probability by LDA, thus \emph{Protest} and \emph{Shoot Accident}.\psrcomment{I think you mean \emph{Incident}.} Words in \emph{Shoot Accident} talks about \emph{shoot}, \emph{Michael\_brown} and \emph{street}, which tend to be description of the shoot accident. Although the sentence contains words like \emph{shoot}, it is not appropriate to be assigned with topic 7. Meanwhile for the tweet there is small probability under other topics such as \emph{Obama Talk} and \emph{Racism}, which have nothing to do with the content of the tweet. Similarly the second tweet mainly talks about racism, which is what \stlda gives. But it also has the latent topic \emph{Obama Talk} with probability 0.373, and a slight probability for other topics under LDA model. From the text of tweet, it is neither relevant to \emph{Obama Talk}, nor to other topics. The third tweet is talking about police shooting at Michael Brown, which is closest to topic about the accident, so topic 4 \emph{Michael Brown} is appropriate, but others are not. The common pattern in these three cases is that the topic with highest probability in LDA is consistent with the topic given by \stlda. Is it true for all tweets? Could we just use LDA and assign tweet with the one topic with highest probability?
 
 The case of 4th tweet is slightly different. The 4th tweet is constituted by 3 sentences, which seem to talk about media, the protest and race issues. The tweet is assigned by LDA with 5 topics with equally high probability, thus \emph{Protest}, \emph{Michael Brown}, \emph{Shoot Accident}, \emph{Emotion} and \emph{Race and Community}. However it seems that the tweet doesn't mention Michael Brown accident, or shooting things. Similar with the three cases above, there are noisy topics in results given by LDA. It assigns part of the probability to wrong topics, which makes the right topic not so significant. This is the shortage of LDA but tackled by \stlda.
 The 5th tweet shows how \stlda assigns the right topic but LDA fails to. The tweet talks about the role of social media in contrast with news media. The topic is mainly about how others describe the event. So topic 5 \emph{News Report} is appropriate. However, the highest probability goes to \emph{Obama Talk} by LDA, which is not relevant.

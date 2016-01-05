@@ -31,7 +31,9 @@ The corresponding graphical model is given in Figure~\ref{fig:stlda}.
 
 The model looks similar to conventional LDA, since they have same nodes. However, the coverage of two plates are different, which is adapted according to our assumptions.
 
-The first difference is the coverage of word plate (the one with subscript $N_d$). In LDA, it covers both $\bm{z}$ and $\bm{w}$, denoting that every word has its own topic assignment and every document consists of a mixture of topics. In \stlda, the plate only covers $\bm{w}$, which means that every word in a tweet is generated from the same topic.
+The first difference is the coverage of word plate (the one with subscript $N_d$).
+In LDA, it covers both $\bm{z}$ and $\bm{w}$, denoting that every word has its own topic assignment and every document consists of a mixture of topics.
+In \stlda, the plate only covers $\bm{w}$, which means that every word in a tweet is generated from the same topic.\psrcomment{Is there going to be a problem with ``generic" or ``non-topical" words? Not \emph{every} content word is topical, is it?}
 
 The second difference is the coverage of document plate (the one with subscript $D$). LDA assumes that every document has a topic distribution, but in \stlda, every document only has one topic which can not form a distribution inside a document. Thus, $\bm{\theta}$ is outside the document plate and denotes a background topic distribution of the corpus.
 
@@ -52,7 +54,10 @@ where $N_k$ denotes the number of documents assigned to topic $k$; $N_{d,v}$ is 
 % \end{equation}
 
 \subsection{Topic Dynamics}
-\stlda is able to train long (news) and short documents (tweets) simultaneously, by assigning multiple topics to long documents and one topic to short documents. The output results of \stlda model can be used for further discovery of topic dynamics of tweets and news. We define topic dynamics as temporal change of topics using daily sliding window. Assuming that every news document has the same impact and contributes equally to the total media environment, the topic proportion of day $t$ is the average of topic probabilities of all news documents on that day as
+\stlda is able to train long (news) and short documents (tweets) simultaneously, by assigning multiple topics to long documents and one topic to short documents.\psrcomment{This is the generative process for \emph{tweets}, but what about news? If this is the whole model, how do news stories get multiple topics?}
+The output results of \stlda model can be used for further discovery of topic dynamics of tweets and news.
+We define topic dynamics as temporal change of topics using daily sliding window.
+Assuming that every news document has the same impact and contributes equally to the total media environment,\psrcomment{A big assumption? Add weighting?} the topic proportion of day $t$ is the average of topic probabilities of all news documents on that day as
 
 \begin{equation}
 \bar{\theta}_{t,k}^{\mathrm{news}}=\frac{\sum_{d=1}^{D_t^{\mathrm{news}}} \theta_{d,k}}{D_t^{\mathrm{news}}},
@@ -66,4 +71,4 @@ Differently, each tweet $d$ has only one topic $z_d$ given by \stlda. Under the 
 \end{equation}
 where $D_t^{\mathrm{tweets}}$ denotes the number of tweet documents on day $t$ and $\mathbbm{1}(\cdot)$ is an indicator function.
 
-Given $\bm{\bar{\theta}_t^{\mathrm{news}}}$ and $\bm{\bar{\theta}_t^{\mathrm{tweets}}}$ where $t$ varies from August 11 to 27, we can identify topic dynamics by the changing of daily topic proportions.
+Given $\bm{\bar{\theta}_t^{\mathrm{news}}}$ and $\bm{\bar{\theta}_t^{\mathrm{tweets}}}$ where $t$ varies from August 11 to 27, we can identify topic dynamics by the changing of daily topic proportions. 
