@@ -42,13 +42,13 @@
 
 % commands for comments
 \newcommand{\psrcomment}[1]{\textcolor{green}{[PSR: {\bf #1}]} }
-\newcommand{\wycomment}[1]{\textcolor{blue}{[WY: {\bf #1}]} }
+%\newcommand{\wycomment}[1]{\textcolor{blue}{[WY: {\bf #1}]} }
 \newcommand{\lhcomment}[1]{\textcolor{magenta}{[LH: {\bf #1}]} }
 \newcommand{\vfmcomment}[1]{\textcolor{red}{[VFM: {\bf #1}]} }
 
 % Use these comment definitions to see paper without comments
 %\newcommand{\psrcomment}[1]{}
-%\newcommand{\wycomment}[1]{}
+\newcommand{\wycomment}[1]{}
 %\newcommand{\lhcomment}[1]{}
 %\newcommand{\vfmcomment}[1]{}
 
@@ -57,7 +57,7 @@
 
 \title{Uncovering Topic Dynamics of Social Media and News: A Ferguson Case}
 
-\author{A bunch of new commands are defined. Please take a look at 2016\_icwsm\_topicDynamic.tex.}
+\author{}
 %\author{Lingzi Hong \\
 %  iSchool \\
 %  University of Maryland \\
@@ -92,17 +92,15 @@
 
 \input{sections/02-Related_Work.tex}
 
-\input{sections/03-Methodology.tex}
+\input{sections/03-Method.tex}
 
-\input{sections/04-Dataset.tex}
+\input{sections/04-Evaluation_of_Topic_Quality.tex}
 
-\input{sections/05-Evaluation_of_Topics.tex}
+\input{sections/05-Topic_Dynamics_of_Tweets_and_News.tex}
 
-\input{sections/06-Topic_Dynamics_of_Tweets_and_News.tex}
+\input{sections/06-Conclusions.tex}
 
-\input{sections/07-Conclusions.tex}
-
-\input{sections/Acknowledgement.tex}
+%\input{sections/Acknowledgement.tex}
 
 \bibliographystyle{style/aaai}
 \bibliography{bib/journal-full,bib/ref}
