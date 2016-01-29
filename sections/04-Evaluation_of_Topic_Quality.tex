@@ -18,7 +18,7 @@ Then we run a depth-first search algorithm on the KL divergence table to find th
 \begin{tabular}{|c|c|l|}
 \hline
 \bf \tabincell{c}{Model\\(Corpus)} & \bf Topic & \multicolumn{1}{c|}{\bf Top Words}\\ \hline
-\multirow{5}*{\tabincell{c}{LDA\\(NT)\tnote{1}}} & Obama Talk & \tabincell{l}{happen, i'm, make, thing, talk, situation, what's, what's\_happen, bad, you're\\\wycomment{Does this topic really belong to \obamatalk?}}\\ \cline{2-3}
+\multirow{5}*{\tabincell{c}{LDA\\(NT)\tnote{1}}} & Obama Talk\tnote{3} & happen, i'm, make, thing, talk, situation, what's, what's\_happen, bad, you're\\ \cline{2-3}
  & Protest & tear\_gas, protester, arrest, fire, medium, rt, protestor, street, crowd\\ \cline{2-3}
  & Racist & black, white, loot, protect, community, racist, stop, race, citizen, riot\\ \cline{2-3}
  & Curfew & missouri, state, obama, national\_guard, call, curfew, mo, press, governor\\ \cline{2-3}
@@ -38,6 +38,7 @@ Then we run a depth-first search algorithm on the KL divergence table to find th
 \footnotesize
 \item[1] NT: news and tweets.
 \item[2] N: news only.
+\item[3] This topic is matching with \obamatalk in \stlda. Although top words show it is about question of the situation, for comparison we still name the topic with \obamatalk.
 \end{tablenotes}
 \caption{Topic Examples}\label{tab:topic}
 \end{threeparttable}
@@ -47,6 +48,8 @@ To make sure that \stlda has balanced topics that come from both tweets and news
 
 \subsection{Topic Quality for Tweets}
 \label{subsec:intrinsic}
+%Perplexity is usually employed to quantitatively evaluate the topic quality. It is computed based on every single word. However, \stlda treats each tweet as a whole, not single words, so perplexity is not applicable to evaluate topic quality of LDA and \stlda. Therefore, we evaluate topic quality qualitatively instead of quantitatively.
+
 Accurate topic assignment is important for analysis of topic dynamics. In this part we pick several tweets and evaluate quality of topic assignment by \stlda. We list five tweets in Table~\ref{tab:tweets} and manually labeled with the main topic. Topic assignments by LDA and \stlda are given in Table~\ref{tab:tweet_topic}. Topics in LDA and \stlda are matched and numbered from 0 to 9. Names of topics are manually summarized according to top frequency words in the topic.
 
 \begin{table*}[htpb]
